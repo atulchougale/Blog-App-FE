@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { toast } from 'react-toastify';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-
 import { Link } from 'react-router-dom';
 import { Button, Typography, Box, Grid, Pagination } from '@mui/material';
 
@@ -14,7 +13,6 @@ const POSTS_PER_PAGE = 4;
 
 const Profile = () => {
     const { account, setAccount } = useContext(DataContext);
-    // console.log(account)
     const [posts, setPosts] = useState([]);
     const [page, setPage] = useState(1);
     const [image, setImage] = useState("")
@@ -27,9 +25,7 @@ const Profile = () => {
             try {
                 let response = await API.myPosts();
                 if (response.isSuccess) {
-                    console.log(response.data);
                     setPosts(response.data)
-
                 }
             } catch (error) {
                 console.error(error);
@@ -53,20 +49,14 @@ const Profile = () => {
                 })
                     .then(res => res.json())
                     .then(data => {
-                        // console.log(data)
-
                         setUrl(data.url)
-
                     })
                     .catch(err => {
                         console.log(err)
                     })
             }
-
         }
-
         getImage();
-
     }, [image])
 
     const getPaginatedPosts = () => {
@@ -74,7 +64,6 @@ const Profile = () => {
         const endIndex = startIndex + POSTS_PER_PAGE;
         return posts.slice(startIndex, endIndex);
     };
-
 
 
     const handleImageChange = (e) => {
@@ -85,9 +74,7 @@ const Profile = () => {
         let response = await API.updateProfilePic({ pic: url })
         if (response.isSuccess) {
             setAccount({ ...account, pic: url })
-            // console.log(response.data)
             toast.success(' Profile picture is updated 🥰 !')
-
         }
     }
 
@@ -106,7 +93,7 @@ const Profile = () => {
                 }}>
                     <Box>
                         <img style={{ width: "160px", height: "160px", borderRadius: "80px" }}
-                            src={account.pic} alt="profile picture"
+                            src={account.pic} alt="profile pictures"
                         />
 
                     </Box>
@@ -115,8 +102,8 @@ const Profile = () => {
                         <Typography variant="h5" gutterBottom></Typography>
                         <Box style={{ display: "flex", justifyContent: "space-between", width: "120%" }}>
                             <Typography variant="h5" gutterBottom > {posts.length} posts</Typography>
-                            <Typography variant="h5" gutterBottom> followers</Typography>
-                            <Typography variant="h5" gutterBottom>following</Typography>
+                            <Typography variant="h5" gutterBottom>{account.followers.length} followers</Typography>
+                            <Typography variant="h5" gutterBottom>{account.following.length} following</Typography>
                         </Box>
 
                     </Box>
@@ -138,10 +125,6 @@ const Profile = () => {
 
                 </Box>
             </Box>
-
-
-
-            {/* <Grid container spacing={2}> */}
 
             {getPaginatedPosts().length > 0 ? (
                 <>
@@ -168,19 +151,10 @@ const Profile = () => {
                     No data is available for selected category
                 </Box>
             )}
-
-            {/* </Grid> */}
-
-
-
             <Box>
-
             </Box>
-
-
         </Box>
     )
 }
-
 
 export default Profile

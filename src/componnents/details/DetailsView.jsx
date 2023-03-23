@@ -1,10 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import { Box, Typography, styled } from '@mui/material';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 import { Delete, Edit, Favorite, FavoriteBorder } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-
 
 
 // components
@@ -65,7 +64,7 @@ const Author = styled(Box)(({ theme }) => ({
     marginTop: '10px',
     fontSize: '14px',
     color: '#878787',
-    padding:'15px 0 15px 0',
+    padding: '15px 0 15px 0',
     [theme.breakpoints.down('sm')]: {
         display: 'block'
     },
@@ -82,8 +81,7 @@ const DetailView = () => {
     const [totalComments, setTotalComments] = useState();
     const [totalLikes, setTotalLikes] = useState()
     const [toggle, setToggle] = useState(false)
-
-
+    const [postedBy, setPostedBy] = useState()
 
     const { id } = useParams();
 
@@ -92,14 +90,9 @@ const DetailView = () => {
     const navigate = useNavigate();
 
     const userId = sessionStorage.getItem('userId');
-    
-
-    
-
 
     const url = 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
 
-   
 
     useEffect(() => {
         const fetchData = async () => {
@@ -107,33 +100,26 @@ const DetailView = () => {
             if (response.isSuccess) {
                 setPost(response.data);
                 setTotalLikes(response.data.likes.length)
-                console.log(response.data)
+                setPostedBy(response.data.postedBy._id)
             }
         }
         fetchData();
+    }, [id, toggle])
 
-
-
-    }, [id,toggle ])
-    console.log(post.postedBy._id)
-    
 
     useEffect(() => {
         const getData = async () => {
-          try {
-            const response = await API.getAllComments(post._id);
-            if (response.isSuccess) {
-              setTotalComments(response.data.length);
+            try {
+                const response = await API.getAllComments(post._id);
+                if (response.isSuccess) {
+                    setTotalComments(response.data.length);
+                }
+            } catch (error) {
+                console.error('Error in getData:', error);
             }
-          } catch (error) {
-            console.error('Error in getData:', error);
-          }
         };
-      
         getData();
-      }, [post._id]);
-
-   
+    }, [post._id]);
 
 
     const deleteBlog = async () => {
@@ -142,21 +128,12 @@ const DetailView = () => {
             toast.success('Blog Deleting Successful 😔 !')
             navigate('/');
         }
-
     }
-
-
-
-
-
 
     const likePost = async (id) => {
 
         let response = await API.like(post)
         if (response.isSuccess) {
-
-          
-            // console.log(response.data)
 
             setTotalLikes(response.data.likes.length)
             setPost(response.data)
@@ -164,9 +141,6 @@ const DetailView = () => {
             setToggle(prevState => !prevState);
         }
     }
-
-
-
 
     const unlikePost = async (id) => {
 
@@ -181,24 +155,15 @@ const DetailView = () => {
     }
 
 
- 
-   
-
-    
-
-
-
     return (
         <Container>
             <Image src={post.picture || url} alt="post" />
             <Box style={{ marginTop: "10px" }} >
                 {Array.isArray(post.likes) && post.likes.includes(userId) ? (
-                    <Favorite style={{ color: "#FAA0A0" ,fontSize:"40px"}} onClick={() => unlikePost(post._id)} />
+                    <Favorite style={{ color: "#FAA0A0", fontSize: "40px" }} onClick={() => unlikePost(post._id)} />
                 ) : (
-                    <FavoriteBorder style={{ fontSize:"40px"}} onClick={() => likePost(post._id)} />
+                    <FavoriteBorder style={{ fontSize: "40px" }} onClick={() => likePost(post._id)} />
                 )}
-
-                
 
             </Box>
             <Likes >
@@ -207,7 +172,6 @@ const DetailView = () => {
                 <h4>{totalComments} Comments</h4>
 
             </Likes>
-
 
             <Box style={{ float: 'right' }}>
 
@@ -223,7 +187,7 @@ const DetailView = () => {
             <Heading>{post.title}</Heading>
 
             <Author>
-                <Link to={post.postedBy._id !== account.id?"/profile/"+post.postedBy._id :"/profile"  } style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Link to={postedBy !== account.id ? "/profile/" + postedBy : "/profile"} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Typography>Author: <span style={{ fontWeight: 600 }}>{post.username}</span></Typography>
                 </Link>
                 <Typography style={{ marginLeft: 'auto' }}>{new Date(post.createdDate).toDateString()}</Typography>

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 
 //components
-
 import Post from './Post';
 import { API } from '../../../service/api';
 
@@ -52,7 +51,7 @@ const Posts = () => {
                             </Grid>
                         ))}
                     </Grid>
-                   
+
                     <Box display="flex" justifyContent="center" alignItems={'center'} marginTop={4}>
                         <Pagination
                             count={Math.ceil(posts.length / POSTS_PER_PAGE)}

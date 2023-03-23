@@ -36,7 +36,6 @@ const StyledLink = styled(Link)`
 `;
 
 
-
 const Categories = () => {
 
     const [searchParams] = useSearchParams();
@@ -47,35 +46,32 @@ const Categories = () => {
             <Link to={`/create?category=${category || ''}`} style={{ textDecoration: 'none' }}>
                 <StyledButton variant="contained">Create Blog</StyledButton>
             </Link>
-            <Box style={{boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
-            <StyledTable>
-                <TableHead style={{border: '1.5px solid black',borderRadius:'10px'}}>
-                    <TableRow>
-                        <TableCell style={{border: '1.5px solid black',backgroundColor:'#D6EEEE'}}>
-                            <StyledLink to={"/"}>
-                                All Categories
-                            </StyledLink>
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody style={{border: '1.5px solid black'}}>
-                    {
-                        categories.map(category => (
-                            <TableRow key={category.id}>
-                                <TableCell style={{border: '1.5px solid black'}} >
-                                    <StyledLink to={`/?category=${category.type}`}>
-                                        {category.type}
-                                    </StyledLink>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    }
-
-
-                </TableBody>
-            </StyledTable>
+            <Box style={{ boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)' }}>
+                <StyledTable>
+                    <TableHead style={{ border: '1.5px solid black', borderRadius: '10px' }}>
+                        <TableRow>
+                            <TableCell style={{ border: '1.5px solid black', backgroundColor: '#D6EEEE' }}>
+                                <StyledLink to={"/"}>
+                                    All Categories
+                                </StyledLink>
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody style={{ border: '1.5px solid black' }}>
+                        {
+                            categories.map(category => (
+                                <TableRow key={category.id}>
+                                    <TableCell style={{ border: '1.5px solid black' }} >
+                                        <StyledLink to={`/?category=${category.type}`}>
+                                            {category.type}
+                                        </StyledLink>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        }
+                    </TableBody>
+                </StyledTable>
             </Box>
-            
         </>
     )
 }

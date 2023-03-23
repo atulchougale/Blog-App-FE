@@ -4,7 +4,6 @@ import { red} from '@mui/material/colors';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
-
 import { useNavigate } from 'react-router-dom';
 
 import { API } from '../../service/api';

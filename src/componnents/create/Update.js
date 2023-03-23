@@ -1,5 +1,5 @@
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { styled, Box, InputBase, FormControl,Button } from '@mui/material';
+import { styled, Box, InputBase, FormControl, Button } from '@mui/material';
 import React, { useEffect, useState, useContext } from 'react';
 import ReactQuill from 'react-quill';
 import { toast } from 'react-toastify';
@@ -11,19 +11,19 @@ import { DataContext } from '../../context/DataProvider';
 import { API } from '../../service/api';
 
 const modules = {
-  toolbar: [
-    ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-    [{ font: [] }],
-    [{ size: [] }],
-    [      { list: 'ordered' },      { list: 'bullet' },      { indent: '-1' },      { indent: '+1' },    ],
-    [{ script: 'sub' }, { script: 'super' }],
-    [{ color: [] }, { background: [] }],
-    [{ align: [] }],
-    ['clean'],
-    [{ direction: 'rtl' }],
-    ['link', 'image', 'video'],
-  ],
+    toolbar: [
+        ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        [{ font: [] }],
+        [{ size: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' },],
+        [{ script: 'sub' }, { script: 'super' }],
+        [{ color: [] }, { background: [] }],
+        [{ align: [] }],
+        ['clean'],
+        [{ direction: 'rtl' }],
+        ['link', 'image', 'video'],
+    ],
 };
 
 const Editor = styled(Box)`
@@ -31,16 +31,16 @@ const Editor = styled(Box)`
 `;
 
 const Container = styled(Box)(({ theme }) => ({
-  margin: '50px 100px',
-  [theme.breakpoints.down('md')]: {
-    margin: 0,
-  },
+    margin: '50px 100px',
+    [theme.breakpoints.down('md')]: {
+        margin: 0,
+    },
 }));
 
 const Image = styled('img')({
-  width: '100%',
-  height: '50vh',
-  objectFit: 'cover',
+    width: '100%',
+    height: '50vh',
+    objectFit: 'cover',
 });
 
 const StyledFormControl = styled(FormControl)`
@@ -57,25 +57,23 @@ const InputTextField = styled(InputBase)`
 `;
 
 const initialPost = {
-  title: '',
-  description: '',
-  picture: '',
-  username: '',
-  categories: '',
-  createdDate: new Date(),
+    title: '',
+    description: '',
+    picture: '',
+    username: '',
+    categories: '',
+    createdDate: new Date(),
 };
 
 
 const Update = () => {
     const navigate = useNavigate();
     const location = useLocation();
-
     const [post, setPost] = useState(initialPost);
     console.log(post.title);
     const [file, setFile] = useState('');
     const [picture, setPicture] = useState('');
     const { id } = useParams();
-
     const { account } = useContext(DataContext);
 
     const url = picture ? picture : 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
@@ -88,7 +86,7 @@ const Update = () => {
             }
         }
         fetchData();
-    }, [id ])
+    }, [id])
 
     useEffect(() => {
         const getImage = async () => {
@@ -105,7 +103,7 @@ const Update = () => {
                     .then(res => res.json())
                     .then(data => {
                         setPicture(data.url);
-                        console.log(data)
+                        
                     })
                     .catch(err => {
                         console.log(err)
@@ -115,7 +113,7 @@ const Update = () => {
         getImage();
         post.categories = location.search?.split('=')[1] || 'All';
         post.username = account.username;
-    }, [file,location.search,account.username])
+    }, [file, location.search, account.username,post])
 
     const updateBlogPost = async () => {
         post.picture = picture;

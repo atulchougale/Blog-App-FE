@@ -1,16 +1,14 @@
 import { useState, useEffect, useContext } from 'react';
-import { Box,  Button, styled } from '@mui/material';
-import {toast} from 'react-toastify';
+import { Box, Button, styled } from '@mui/material';
+import { toast } from 'react-toastify';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-
 
 
 //components
 import Comment from './Comment';
 import { DataContext } from '../../../context/DataProvider';
 import { API } from '../../../service/api';
-
 
 
 const modules = {
@@ -75,13 +73,13 @@ const Comments = ({ post }) => {
             if (response.isSuccess) {
                 // console.log(response)
                 setComments(response.data);
-                
+
             }
         }
         getData();
     }, [post, toggle])
 
-    
+
 
     const handleChange = (e) => {
         setComment({
@@ -89,12 +87,9 @@ const Comments = ({ post }) => {
             name: account.username,
             postId: post._id,
             comments: e,
-            
-            
         })
     }
 
-    // console.log("comment",comment)
     const addComment = async (e) => {
         let response = await API.newComment(comment);
         if (response.isSuccess) {
@@ -112,7 +107,7 @@ const Comments = ({ post }) => {
                     height: "50px !important",
                     width: "100 %",
                     margin: "0px 20px 60px 20px",
-                    
+
                 }}
                     theme="snow"
                     value={comment.comments}
@@ -121,7 +116,7 @@ const Comments = ({ post }) => {
 
                     placeholder="what's on your mind?"
                 />
-              
+
                 <Button
                     variant="contained"
                     color="primary"

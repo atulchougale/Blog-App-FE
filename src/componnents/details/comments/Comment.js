@@ -1,13 +1,11 @@
 
 import { Typography, Box, styled } from "@mui/material";
 import { Delete } from '@mui/icons-material';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import { DataContext } from "../../../context/DataProvider";
 import { useContext } from "react";
-
 import { API } from "../../../service/api";
-
 
 const Component = styled(Box)`
     margin-top: 30px;
@@ -55,7 +53,7 @@ const Comment = ({ comment, setToggle }) => {
                 <StyledDate>{new Date(comment.date).toDateString()}</StyledDate>
                 {comment.name === account.username && <DeleteIcon onClick={() => removeComment()} />}
             </Container>
-            <Typography dangerouslySetInnerHTML={{ __html: comment.comments}}></Typography>
+            <Typography dangerouslySetInnerHTML={{ __html: comment.comments }}></Typography>
         </Component>
     )
 }

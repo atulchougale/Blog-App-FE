@@ -14,7 +14,6 @@ const Image = styled(Box)`
 
 const Heading = styled(Typography)`
     font-size: 70px;
-    ${'' /* color: #B4F718; */}
     background-image: linear-gradient(to bottom right, red, yellow);
     line-height: 1
     

@@ -3,43 +3,76 @@ import { styled, Box, Button, InputBase, FormControl } from '@mui/material';
 import React, { useEffect, useState, useContext } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import {toast} from 'react-toastify';
+import { EmojiBlot, ShortNameEmoji, ToolbarEmoji } from 'quill-emoji';
+import { toast } from 'react-toastify';
+import Quill from 'quill';
 
 
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-
 import { DataContext } from '../../context/DataProvider';
 import { API } from '../../service/api';
 
-
-
-
-
+Quill.register({
+    'formats/emoji': EmojiBlot,
+    'modules/emoji-shortname': ShortNameEmoji,
+    'modules/emoji-toolbar': ToolbarEmoji,
+});
 
 const modules = {
-    toolbar: [
-        ["bold", "italic", "underline", "strike", "blockquote", 'code-block'],
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        [{ font: [] }],
-        [{ size: [] }],
-
-        [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: '+1' },
+    imageResize: {
+        modules: ['Resize', 'DisplaySize', 'Toolbar']
+    },
+    toolbar: {
+        container: [
+            ["bold", "italic", "underline", "strike", "blockquote", 'code-block'],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ font: [] }],
+            [{ size: [] }],
+            [
+                { list: "ordered" },
+                { list: "bullet" },
+                { indent: "-1" },
+                { indent: '+1' },
+            ],
+            [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'color': [] }, { 'background': [] }],
+            ['emoji'],
+            [{ 'align': [] }],
+            ['clean'],
+            [{ 'direction': 'rtl' }],
+            ["link", "image", "video"],
         ],
-        [{ 'script': 'sub' }, { 'script': 'super' }],
-        [{ 'color': [] }, { 'background': [] }],
+        handlers: {
+            emoji: function () {
+                const cursorPosition = this.quill.getSelection().index;
+                this.quill.insertText(cursorPosition, "😀");
+                this.quill.setSelection(cursorPosition + 1);
+            }
+        }
+    },
+    "emoji-toolbar": true,
+    "emoji-textarea": false,
+    "emoji-shortname": true
+};
 
-        [{ 'align': [] }],
+const formats = [
+    "header",
+    "font",
+    "size",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "link",
+    "image",
+    "video",
+    "align",
+    "emoji"
+  ];
 
-        ['clean'],
-        [{ 'direction': 'rtl' }],
-        ["link", "image", "video"],
-       
-    ],
-}
 
 
 const Container = styled(Box)(({ theme }) => ({
@@ -51,7 +84,7 @@ const Container = styled(Box)(({ theme }) => ({
 
 const Image = styled('img')({
     width: '100%',
-    height:'50vh',
+    height: '50vh',
     objectFit: 'contain '
 });
 
@@ -83,59 +116,44 @@ const initialPost = {
 }
 
 
-
-
 const CreatePost = () => {
     const navigate = useNavigate();
     const location = useLocation();
-
     const [post, setPost] = useState(initialPost);
     const [file, setFile] = useState('');
     const [picture, setPicture] = useState('');
-   
-   
-
     const { account } = useContext(DataContext);
-
-
-
-
-
 
     const url = picture ? picture : 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
 
     useEffect(() => {
         const getImage = async () => {
             if (file) {
-                
+
                 const data = new FormData();
                 data.append("file", file);
-                data.append("upload_preset","blog-app")
-                data.append("cloud_name","atul07")
-              
-                fetch("https://api.cloudinary.com/v1_1/atul07/image/upload",{
-                    method:"post",
-                    body:data
+                data.append("upload_preset", "blog-app")
+                data.append("cloud_name", "atul07")
+
+                fetch("https://api.cloudinary.com/v1_1/atul07/image/upload", {
+                    method: "post",
+                    body: data
                 })
-                .then(res=>res.json())
-                .then(data=>{
-                    console.log(data)
-                    setPicture(data.url);
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data)
+                        setPicture(data.url);
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             }
-           
         }
-        
         getImage();
-        
         setPost(prevPost => ({ ...prevPost, categories: location.search?.split('=')[1] || 'All' }));
         setPost(prevPost => ({ ...prevPost, username: account.username }));
-        
     }, [file, location.search, account.username])
-    
+
 
     const savePost = async () => {
         post.picture = picture;
@@ -144,7 +162,6 @@ const CreatePost = () => {
             toast.success('Blog is Created Successfull 😘')
             navigate('/');
         }
-
     }
 
     const handleChange = (e) => {
@@ -154,14 +171,12 @@ const CreatePost = () => {
     const contentFieldChanaged = (data) => {
 
         setPost({ ...post, 'description': data })
-
-
     }
 
     return (
         <Container>
             <h1>Whats going in your mind ?</h1>
-            <Image src={url} alt="post Image"  />
+            <Image src={url} alt="post Image" />
 
             <StyledFormControl>
                 <label htmlFor="fileInput">
@@ -177,27 +192,21 @@ const CreatePost = () => {
                 <Button onClick={() => savePost()} variant="contained" color="primary">PUBLISH</Button>
             </StyledFormControl>
             <Editor>
-                    <ReactQuill
-                        style={{
-                            height: "100px !important",
-                            width: "100 %",
-                            margin: "0px 20px 60px 20px"}}
-                        theme="snow"
-                        value={ post.description }
-                        onChange={(newContent) => contentFieldChanaged(newContent)}
+                <ReactQuill
+                    style={{
+                        height: "100px !important",
+                        width: "100 %",
+                        margin: "0px 20px 60px 20px"
+                    }}
+                    theme="snow"
+                    value={post.description}
+                    onChange={(newContent) => contentFieldChanaged(newContent)}
                     modules={modules}
-
+                    formats={formats}
                     placeholder="Tell Your Story..."
-                    />
-               
-                
+                />
             </Editor>
-
-
         </Container>
-
-
-
     )
 }
 

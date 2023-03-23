@@ -1,6 +1,6 @@
 import { TextField, Box, Button, Typography, styled } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import React, { useContext, useState,useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { API } from '../../service/api';
@@ -8,12 +8,10 @@ import { DataContext } from '../../context/DataProvider';
 import { useNavigate } from 'react-router-dom';
 
 
-
 const Component = styled(Box)`
     width: 450px;
     margin: auto;
     border-radius :10px;
-    ${'' /* box-shadow: 5px 2px 5px 2px rgb(0 0 0/ 0.6); */}
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 `;
 
@@ -88,14 +86,9 @@ const Login = ({ isUserAuthenticated }) => {
     const [error, setError] = useState('');
     const [image, setImage] = useState("")
     const [url, setUrl] = useState(undefined)
-
     const [account, toggleAccount] = useState('login');
-
     const { setAccount } = useContext(DataContext);
-
     const navigate = useNavigate();
-
-
 
     const imageURL = 'https://macln.files.wordpress.com/2011/01/blog_logo.jpg'
 
@@ -107,30 +100,30 @@ const Login = ({ isUserAuthenticated }) => {
     useEffect(() => {
         const getImage = async () => {
             if (image) {
-                
+
                 const data = new FormData();
                 data.append("file", image);
-                data.append("upload_preset","blog-app")
-                data.append("cloud_name","atul07")
-              
-                fetch("https://api.cloudinary.com/v1_1/atul07/image/upload",{
-                    method:"post",
-                    body:data
+                data.append("upload_preset", "blog-app")
+                data.append("cloud_name", "atul07")
+
+                fetch("https://api.cloudinary.com/v1_1/atul07/image/upload", {
+                    method: "post",
+                    body: data
                 })
-                .then(res=>res.json())
-                .then(data=>{
-                    console.log(data)
-                    setUrl(data.url);
-                })
-                .catch(err=>{
-                    console.log(err)
-                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data)
+                        setUrl(data.url);
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             }
-           
+
         }
-        
+
         getImage();
-     
+
     }, [image])
 
 
@@ -139,7 +132,7 @@ const Login = ({ isUserAuthenticated }) => {
     }
 
     const signupUser = async () => {
-        signup.pic = url ;
+        signup.pic = url;
         let response = await API.userSingup(signup);
         if (response.isSuccess) {
             setError('');
@@ -180,8 +173,6 @@ const Login = ({ isUserAuthenticated }) => {
 
     }
 
-
-
     return (
         <Component>
             <Box>
@@ -201,7 +192,6 @@ const Login = ({ isUserAuthenticated }) => {
                             <TextField variant="outlined" value={login.email} onChange={(e) => onValueChange(e)} name='email' label='Enter Email' />
                             <TextField variant="outlined" value={login.password} onChange={(e) => onValueChange(e)} name='password' label='Enter Password' />
 
-
                             {error && <Error>{error}</Error>}
                             <LoginButton variant="contained" onClick={() => loginUser()} >Login</LoginButton>
                             <Text style={{ textAlign: 'center' }}>OR</Text>
@@ -211,8 +201,6 @@ const Login = ({ isUserAuthenticated }) => {
 
                         //register page 
                         <Wrapper>
-
-
                             <Typography mt={2} variant="h3" component="h3" style={{ textAlign: 'center', color: '#4CE91C' }}>
                                 Register
                             </Typography>

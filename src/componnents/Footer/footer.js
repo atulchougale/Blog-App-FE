@@ -1,13 +1,9 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, IconButton, Box } from '@mui/material';
-
 import { Facebook, Instagram, GitHub, Google } from "@mui/icons-material";
 
 
-
-
 function Footer() {
-
 
   return (
     <AppBar position="static" sx={{
