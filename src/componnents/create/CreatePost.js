@@ -3,25 +3,18 @@ import { styled, Box, Button, InputBase, FormControl } from '@mui/material';
 import React, { useEffect, useState, useContext } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { EmojiBlot, ShortNameEmoji, ToolbarEmoji } from 'quill-emoji';
 import { toast } from 'react-toastify';
-import Quill from 'quill';
+
 
 
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { DataContext } from '../../context/DataProvider';
 import { API } from '../../service/api';
 
-Quill.register({
-    'formats/emoji': EmojiBlot,
-    'modules/emoji-shortname': ShortNameEmoji,
-    'modules/emoji-toolbar': ToolbarEmoji,
-});
+
 
 const modules = {
-    imageResize: {
-        modules: ['Resize', 'DisplaySize', 'Toolbar']
-    },
+   
     toolbar: {
         container: [
             ["bold", "italic", "underline", "strike", "blockquote", 'code-block'],
@@ -42,17 +35,8 @@ const modules = {
             [{ 'direction': 'rtl' }],
             ["link", "image", "video"],
         ],
-        handlers: {
-            emoji: function () {
-                const cursorPosition = this.quill.getSelection().index;
-                this.quill.insertText(cursorPosition, "😀");
-                this.quill.setSelection(cursorPosition + 1);
-            }
-        }
-    },
-    "emoji-toolbar": true,
-    "emoji-textarea": false,
-    "emoji-shortname": true
+    }
+    
 };
 
 const formats = [
@@ -141,7 +125,6 @@ const CreatePost = () => {
                 })
                     .then(res => res.json())
                     .then(data => {
-                        console.log(data)
                         setPicture(data.url);
                     })
                     .catch(err => {

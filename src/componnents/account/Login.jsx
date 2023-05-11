@@ -112,7 +112,6 @@ const Login = ({ isUserAuthenticated }) => {
                 })
                     .then(res => res.json())
                     .then(data => {
-                        console.log(data)
                         setUrl(data.url);
                     })
                     .catch(err => {
